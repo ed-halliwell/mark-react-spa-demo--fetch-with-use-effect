@@ -7,13 +7,18 @@ interface Joke {
   punchline: string;
 }
 
+interface Quote {
+  quote: string;
+}
+
 function App() {
   const [joke, setJoke] = useState<Joke>();
+  const [quotes, setQuotes] = useState<Quote[]>([]);
 
   useEffect(() => {
     const fetchJoke = async () => {
       const response = await fetch(
-        "https://official-joke-api.appspot.com/jokes/general/random"
+        "https://jokestemp.neillbogie.repl.co/jokes/general/random"
       );
       const jsonBody: Joke[] = await response.json();
       setJoke(jsonBody[0]);
@@ -23,10 +28,16 @@ function App() {
   }, []);
 
   // useEffect(() => {
-  //   fetch("https://official-joke-api.appspot.com/jokes/general/random")
+  //   fetch("https://jokestemp.neillbogie.repl.co/jokes/general/random")
   //     .then(response => response.json())
   //     .then((jsonBody: Joke[]) => setJoke(jsonBody[0]));
   // }, [])
+
+  useEffect(() => {
+    fetch("https://api.kanye.rest/")
+      .then((response) => response.json())
+      .then((jsonBody: Quote) => setQuotes([...quotes, jsonBody]));
+  }, []);
 
   return (
     <>
@@ -47,6 +58,15 @@ function App() {
           <p>
             <i>{joke.punchline}</i>
           </p>
+        </>
+      )}
+      <hr />
+      {quotes && (
+        <>
+          <h1>Kanye Quotes</h1>
+          {quotes.map((quote) => (
+            <p>{quote.quote}</p>
+          ))}
         </>
       )}
     </>
